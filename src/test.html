@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP系统测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: blue;
+            text-align: center;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ERP系统 - 直接测试</h1>
+        <div class="status">
+            ✅ 如果您能看到这个页面，说明基础Web功能正常
+        </div>
+        
+        <p>这是一个纯HTML页面，用于测试基础功能。</p>
+        
+        <button onclick="testClick()">点击测试</button>
+        <button onclick="testAlert()">警告测试</button>
+        
+        <div id="result" style="margin-top: 20px; padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
+            点击按钮查看结果
+        </div>
+    </div>
+
+    <script>
+        function testClick() {
+            document.getElementById('result').innerHTML = 
+                '<strong>✅ JavaScript正常工作！</strong><br>时间: ' + new Date().toLocaleString();
+        }
+        
+        function testAlert() {
+            alert('警告框正常工作！');
+        }
+        
+        // 页面加载完成后显示状态
+        window.onload = function() {
+            document.getElementById('result').innerHTML = 
+                '<strong>✅ 页面加载完成！</strong><br>JavaScript和DOM都正常工作。';
+        };
+    </script>
+</body>
+</html>
