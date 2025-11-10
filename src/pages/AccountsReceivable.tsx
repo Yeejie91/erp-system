@@ -171,12 +171,15 @@ export default function AccountsReceivable() {
 
       await accountsReceivableService.delete(account.id);
 
+      setAccounts((prev) => prev.filter((item) => item.id !== account.id));
+      setPaymentRecords((prev) => prev.filter((item) => item.accountId !== account.id));
+
       if (selectedAccount?.id === account.id) {
         setShowDetailModal(false);
       }
 
       alert('应收账款已删除');
-      loadData();
+      await loadData();
     } catch (error) {
       console.error('删除应收账款失败:', error);
       alert('删除失败，请稍后再试');

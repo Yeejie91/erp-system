@@ -154,12 +154,15 @@ export default function AccountsPayable() {
 
       await accountsPayableService.delete(account.id);
 
+      setAccounts((prev) => prev.filter((item) => item.id !== account.id));
+      setPaymentRecords((prev) => prev.filter((item) => item.accountId !== account.id));
+
       if (selectedAccount?.id === account.id) {
         setShowDetailModal(false);
       }
 
       alert('应付账款已删除');
-      loadData();
+      await loadData();
     } catch (error) {
       console.error('删除应付账款失败:', error);
       alert('删除失败，请稍后再试');
