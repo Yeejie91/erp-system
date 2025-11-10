@@ -52,7 +52,7 @@ export default function Purchases() {
     if (!product) return;
 
     // 使用商品成本价，如果没有则使用售价
-    const unitCost = product.cost || product.price;
+    const unitCost = product.costPrice ?? product.sellingPrice ?? 0;
 
     setPurchaseItems([
       ...purchaseItems,
