@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DollarSign, Eye, Plus, TrendingUp, AlertCircle, Calendar } from 'lucide-react';
+import { DollarSign, Eye, Plus, TrendingUp, AlertCircle, Calendar, Trash2 } from 'lucide-react';
 import { AccountReceivable, PaymentRecord, AccountStatus } from '../types';
 import {
   accountsReceivableService,
@@ -156,6 +156,31 @@ export default function AccountsReceivable() {
   const handleViewDetail = (account: AccountReceivable) => {
     setSelectedAccount(account);
     setShowDetailModal(true);
+  };
+
+  const handleDeleteAccount = async (account: AccountReceivable) => {
+    if (!window.confirm(`确定要删除 ${account.customerName} 的这条应收账款吗？`)) {
+      return;
+    }
+
+    try {
+      const relatedPayments = paymentRecords.filter((p) => p.accountId === account.id);
+      for (const payment of relatedPayments) {
+        await paymentRecordsService.delete(payment.id);
+      }
+
+      await accountsReceivableService.delete(account.id);
+
+      if (selectedAccount?.id === account.id) {
+        setShowDetailModal(false);
+      }
+
+      alert('应收账款已删除');
+      loadData();
+    } catch (error) {
+      console.error('删除应收账款失败:', error);
+      alert('删除失败，请稍后再试');
+    }
   };
 
   const getStatusLabel = (status: AccountStatus) => {
@@ -345,6 +370,13 @@ export default function AccountsReceivable() {
                           <Plus size={18} />
                         </button>
                       )}
+                      <button
+                        onClick={() => handleDeleteAccount(account)}
+                        className="text-red-600 hover:text-red-800"
+                        title="删除"
+                      >
+                        <Trash2 size={18} />
+                      </button>
                     </div>
                   </td>
                 </tr>

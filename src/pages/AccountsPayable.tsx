@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DollarSign, Eye, Plus, TrendingDown, AlertCircle, Calendar } from 'lucide-react';
+import { DollarSign, Eye, Plus, TrendingDown, AlertCircle, Calendar, Trash2 } from 'lucide-react';
 import { AccountPayable, PaymentOutRecord, AccountStatus } from '../types';
 import {
   accountsPayableService,
@@ -139,6 +139,31 @@ export default function AccountsPayable() {
   const handleViewDetail = (account: AccountPayable) => {
     setSelectedAccount(account);
     setShowDetailModal(true);
+  };
+
+  const handleDeleteAccount = async (account: AccountPayable) => {
+    if (!window.confirm(`确定要删除 ${account.supplierName} 的这条应付账款吗？`)) {
+      return;
+    }
+
+    try {
+      const relatedPayments = paymentRecords.filter((p) => p.accountId === account.id);
+      for (const payment of relatedPayments) {
+        await paymentOutRecordsService.delete(payment.id);
+      }
+
+      await accountsPayableService.delete(account.id);
+
+      if (selectedAccount?.id === account.id) {
+        setShowDetailModal(false);
+      }
+
+      alert('应付账款已删除');
+      loadData();
+    } catch (error) {
+      console.error('删除应付账款失败:', error);
+      alert('删除失败，请稍后再试');
+    }
   };
 
   const getStatusLabel = (status: AccountStatus) => {
@@ -322,12 +347,19 @@ export default function AccountsPayable() {
                       {account.remainingAmount > 0 && (
                         <button
                           onClick={() => handleOpenPayment(account)}
-                          className="text-orange-600 hover:text-orange-900"
+                          className="text-green-600 hover:text-green-900"
                           title="付款"
                         >
                           <Plus size={18} />
                         </button>
                       )}
+                      <button
+                        onClick={() => handleDeleteAccount(account)}
+                        className="text-red-600 hover:text-red-800"
+                        title="删除"
+                      >
+                        <Trash2 size={18} />
+                      </button>
                     </div>
                   </td>
                 </tr>
